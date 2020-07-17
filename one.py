@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from scipy import stats, special
 from scipy.stats import mstats
 
-st.title("Information Theory for Investing")
+st.title("Log Optimal Betting")
 
 st.markdown("""
 In 1956, the mathematician John Kelly didn't just discover how to get rich quick — he also proved there was no way to get rich quicker. Given a favorable bet that you can make repeatedly, Kelly determined how much to wager each time so that you maximize the rate at which your wealth grows in the long run. Below, we'll see how Kelly's method works by starting with a simple coin flip example and gradually modifying it to get more interesting.
