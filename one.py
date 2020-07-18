@@ -9,7 +9,7 @@ from scipy.stats import mstats
 st.title("Log Optimal Betting")
 
 st.markdown("""
-In 1956, the mathematician John Kelly didn't just discover how to get rich quick — he also proved there was no way to get rich quicker. Given a favorable bet that you can make repeatedly, Kelly determined how much to wager each time so that you maximize the rate at which your wealth grows in the long run. Below, we'll see how Kelly's method works by starting with a simple coin flip example and gradually modifying it to get more interesting.
+In 1956, the mathematician John Kelly didn't just discover how to get rich quick — he also proved that there was no way to get rich quicker. Given a favorable bet that you can make repeatedly, Kelly determined how much to wager each time so that you maximize the rate at which your wealth grows in the long run. Below, we'll see how Kelly's method works by starting with a simple coin flip example and gradually modifying it to get more interesting.
 """)
 
 st.header("Classical Coin Flip Example")
@@ -22,11 +22,11 @@ Let's start building intiution with a classical coin flip example. You have a bi
 
 So if you bet \$5 and win, you'll get \$10 (your original \$5 plus \$5 more). If you bet \$5 and lose, your \$5 is gone. You can play repeatedly — as many times as you want, as long as you still have money to bet. 
 
-So, how much should you bet? This is the question that Kelly answered in '56.
+So, how much should you bet?
 
-Here's how he reasoned about it. Let's constrain the problem for a moment, and say that you're going to bet the same, fixed fraction $f$ of your total wealth on each flip. So, for example, if $f=20\%$ and you start with \$100, then your first bet is \$20. If you win that first flip, your next bet will be \$24 (20% of \$120). If you lose, it'll be \$16. And so on. Kelly then asked: What is the optimal choice of $f$ for maximizing the growth rate of your wealth?
+Here's how Kelly reasoned about it. Let's constrain the problem for a moment, and say that you're going to bet the same, fixed fraction $f$ of your total wealth on each flip. So, for example, if $f=20\%$ and you start with \$100, then your first bet is \$20. If you win that first flip, your next bet will be \$24 (20% of \$120). If you lose, it'll be \$16. And so on. Kelly then asked: In this constrained setting, what is the optimal choice of $f$ for maximizing the growth rate of your wealth?
 
-Before getting to the answer, let's play around with a simulation to get a feel for what happens as $p$ and $f$ vary. Below, you can choose the value of $p$ and see how different choices of $f$ fare over 10,000 coin flips. These are plotted on a log y scale with base 10, so a "50" on that axis means that you multiplied your wealth by $10^{50}$.
+Instead of jumping right to the answer, let's play around with a simulation to get a feel for what happens as $p$ and $f$ vary. Below, you can choose the value of $p$ and see how different choices of $f$ fare over 10,000 coin flips. These are plotted on a log y scale with base 10, so a "50" on that axis means that you multiplied your wealth by $10^{50}$.
 """)
 
 p = st.slider(
@@ -59,7 +59,8 @@ def plot_flip_lines(p, n_flips):
 plot_flip_lines(p, n_flips)
 
 st.markdown("""
-You may have noticed that it's possible to bet too much, even though this is a favorable game. At the extreme end, if you bet $f=100\%$ of your wealth on each flip, then it only takes a single tails to wipe you out completely. So your probability of going bankrupt is $1-(1-p)^{n}$ which goes to $1$ as $n \\to \infty$. More generally, you can see that high values of $f$ tend to worse outcomes.
+
+In the case where $p=75\%$, it looks like the optimal value of $f$ is $50\%$. And, from these samples at least, it looks like there's a single maximum — our returns go up as $f$ goes from $10\%$ to $50\%$, and then they start going down. In general, it's possible to bet too much, even though this is a favorable game. At the extreme end, if you bet $f=100\%$ of your wealth on each flip, then it only takes a single tails to wipe you out completely. So your probability of going bankrupt is $1-(1-p)^{n}$ which goes to $1$ as $n \\to \infty$.
 
 Let's work now to find the optimal value of $f$, which we'll denote as $f^*$. Once we write down the relevant equation, this will become a straightforward maximization problem. I'll write $X_k$ for the result of the $k^{\\text{th}}$ coin flip, where $X_k = 1$ if heads and $X_k = -1$ if tails. If you bet $f$ of your bankroll $n$ times, then your wealth at the end of those $n$ flips will be multiplied by
 """)
@@ -69,7 +70,7 @@ st.latex("""
 """)
 
 st.markdown("""
-where $H_n$ is the number of heads from those $n$ flips and $T_n$ is the number of tails. Looking at this equation, Kelly chose to maximize the rate of return as a function of $f$, as $n \\to \infty$. In other words, we're choosing $f$ to maximize
+where $H_n$ is the number of heads from those $n$ flips and $T_n$ is the number of tails. As mentioned earlier, Kelly chose to maximize the rate of return as a function of $f$, as $n \\to \infty$. In other words, we're choosing $f$ to maximize
 """)
 
 st.latex("""
@@ -91,7 +92,7 @@ e^{rn} = (1 + f)^{H_n}(1 - f)^{T_n}
 st.markdown("""
 and say that we're choosing $f$ to maximize $r$ as $n\\to \infty$. This amounts to the exact same thing, of course, but it's going to make the notation a little easier. (It also makes some connections to information theory clearer; we'll briefly note this later.) We'll call $r$ the "exponential rate of return".
 
-You might ask why we'd want to maximize the rate of return. Intuitively, this rate is what will matter most to your wealth in the long run — starting with \$1,000 and compounding at 20% per annum for 100 years will leave you wealthier than starting with \$1,000,000 and compounding at 10% per annum.
+As an aside, you might ask why we'd want to maximize the rate of return rather than, say, the expected value. Intuitively, this rate is what will matter most to your wealth in the long run — starting with \$1,000 and compounding at 20% per annum for 100 years will leave you wealthier than starting with \$1,000,000 and compounding at 10% per annum.
 
 In any case, let's solve this maximization problem. We take logs of each side to get that
 """)
@@ -103,7 +104,7 @@ r = \\frac{H_n}{n}\log(1+f) + \\frac{T_n}{n}\log(1-f).
 """)
 
 st.markdown("""
-$H_n$ trends towards $np$ (probability of heads times the number of flips), so $H_n/n$ trends towards $p$. Or, formally, because $H_n \sim \\text{Binom}(n,p)$, so that $\mathbb{E}(H_n) = np$ we have that $H_n/n \\to p$ almost surely as $n \\to \infty$ by the strong law of large numbers. And similarly $T_n/n \\to 1-p$. So, in the limit as $n \\to \infty$, we're trying to maximize
+$H_n$ trends towards $pn$ (probability of heads times the number of flips), so $H_n/n$ trends towards $p$. Or, formally, because $H_n \sim \\text{Binom}(n,p)$, so that $\mathbb{E}(H_n) = np$ we have that $H_n/n \\to p$ almost surely as $n \\to \infty$ by the strong law of large numbers. And similarly $T_n/n \\to 1-p$. So, in the limit as $n \\to \infty$, we're trying to maximize
 """)
 
 st.latex("""
@@ -111,7 +112,7 @@ p\log(1+f) + (1-p)\log(1-f).
 """)
 
 st.markdown("""
-So set the deriviative with respect to $f$ to zero, and now we're just solving
+This is now straightforward. Set the deriviative with respect to $f$ to zero, and now we're just solving
 """)
 
 st.latex("""
@@ -119,7 +120,7 @@ st.latex("""
 """)
 
 st.markdown("""
-And this equation is solved by $f^*=2p-1$. So this is the answer to our original question: When the probability of heads is $p$, you should bet $2p-1$ of your current wealth on each flip. This is more conservative than you might imagine: When $p=75\%$, for example, you only want to bet 50% of your wealth on each flip.
+And this equation is solved by $f^*=2p-1$. So this is the answer to our original question: When the probability of heads is $p$, you should bet $2p-1$ of your current wealth on each flip. This matches our numeric experiment from earlier: When $p=75\%$, then $f^* = 2p - 1 = 50\%$.
 
 It's worth playing around with this for a little, to get a feel for what other values of $f$ look like. Below, you can set $f$ (with $p$ set by the slider above) to see what happens to your returns over time, and what happens to the equation $p\log(1+f) + (1-p)\log(1-f)$, i.e. the log EV of our return multiple. (If you want to change $p$ too, you can do it with the slider above, from the last plot.)
 """)
@@ -190,20 +191,20 @@ st.latex("""
 st.markdown("""
 almost surely. So, just as with the coin flip example, we want to find $f^*$ to maximize the expected value of the log of our payout multiple. And this this is why you'll often hear Kelly betting described as "log optimal" betting.
 
-A little bookkeeping: At the beginning of this section, we assumed that we were going to bet a fixed fraction $f$ of our wealth. But in general, might we not have to consider betting some sequence $f_k$ on each $X_k$? No, not if the $X_k$ are IID. The sketch of the argument is just that we'd get the same value of $f_k = f$ for each $k$, conditioning on the earlier outcomes. (Even when the $X_k$ are dependent on each other, it turns out that the strategy that maximizes your wealth growth rate is still to make the conditionally log-optimal bet.)
+A little bookkeeping: At the beginning of this section, we assumed that we were going to bet a fixed fraction $f$ of our wealth. But in general, might we not have to consider betting some sequence $f_k$ on each $X_k$? No, not if the $X_k$ are IID. The sketch of the argument is just that we'd get the same value of $f_k = f$ for each $k$, conditioning on the earlier outcomes. (And even when the $X_k$ are dependent on each other, it turns out that the strategy that maximizes your wealth growth rate is still to make the conditionally log-optimal bet.)
 
 I also said it was obvious that the wealth growth multiple, $1+fX$, is the right thing to maximize, since this is what dominates returns in the long run. Actually, this is a bit "controversial", and the subject of a long-running feud in the literature, generally waged between a group of mathematicians who are pro-Kelly and a group of classical economists who are anti-Kelly. Econ Nobel Laureate Paul Samuelson even wrote a super [snarky
 paper](http://www-stat.wharton.upenn.edu/~steele/Courses/434/434Context/Kelly%20Resources/Samuelson1979.pdf) arguing against the Kelly criterion, using mostly one-syllable words so that his oponents could understand him.
 
-One can argue about utility functions, but I basically think the log-optimal crowd is right — especially if you're managing your own money. For a fun history of the Kelly criterion, check out William Poundstone's [Fortune's Formula](https://www.amazon.com/Fortunes-Formula-Scientific-Betting-Casinos/dp/0809045990). Ed Thorp, one of the mathematicians in the debate (and the inventor of card counting for blackjack) has a [great autobiography](https://www.amazon.com/Man-All-Markets-Street-Dealer/dp/0812979907), and compiled a [set of papers](https://www.amazon.com/KELLY-CAPITAL-GROWTH-INVESTMENT-CRITERION/dp/9814383139) with MacLean and Ziemba.. My favorite take on the economists vs mathematicians debate comes from Ole Peters in a [2012 talk](https://www.youtube.com/watch?v=f1vXAHGIpfc) at Gresham College, where he points out that the economists' perspective optimizes for an "ensemble average" over a population, while the mathematicians' perspective optimizes for an individual outcome over time. 
+One can argue about utility functions, but I basically think the log-optimal crowd is right — especially if you're managing your own money. For a fun history of the Kelly criterion, check out William Poundstone's [Fortune's Formula](https://www.amazon.com/Fortunes-Formula-Scientific-Betting-Casinos/dp/0809045990). Ed Thorp, one of the mathematicians in the debate (and the inventor of card counting for blackjack) has a [great autobiography](https://www.amazon.com/Man-All-Markets-Street-Dealer/dp/0812979907), and compiled a [set of papers](https://www.amazon.com/KELLY-CAPITAL-GROWTH-INVESTMENT-CRITERION/dp/9814383139) with MacLean and Ziemba. My favorite take on the economists vs mathematicians debate comes from Ole Peters in a [2012 talk](https://www.youtube.com/watch?v=f1vXAHGIpfc) at Gresham College, where he points out that the economists' perspective optimizes for an "ensemble average" over a population, while the mathematicians' perspective optimizes for an individual outcome over time. 
 """)
 
 st.header("Betting with an Edge")
 
 st.markdown("""
-As promised, let's now make our coin flip example a little more interesting. In many gambling settings, the odds on a bet are set by other participants — like [parimutuel](https://en.wikipedia.org/wiki/Parimutuel_betting) betting for horse races, pot odds in poker, or even the market pricing of securities in a financial market. To add this idea to our coin flip example, let's put in a toy version of the efficient market hypothesis. Let's say that, instead of the coin flip paying out at even odds, the odds are set by "the market": the market will "bid up" the price of the game until the expected gain is zero. Specifically, if "the market" "thinks" that the probability of heads is $p$, then the toy EMH says that market participants will quickly bid up the price of the game until the odds become $1/p$ times your money if heads (and you lose your money if tails, as before). This makes the EV of \$1 wagered equal to $p\cdot (1/p) + (1-p) \cdot 0 = 1$ (i.e. no expected gain).
+As promised, let's now make our coin flip example a little more interesting. In many gambling settings, the odds on a bet are set by other participants — like parimutuel betting for horse races, pot odds in poker, or even the market pricing of securities in a financial market. To add this idea to our coin flip example, let's put in a toy version of the efficient market hypothesis. Let's say that, instead of the coin flip paying out at even odds, the odds are set by "the market": the market will "bid up" the price of the game until the expected gain is zero. Specifically, if "the market" "thinks" that the probability of heads is $p$, then the toy EMH says that market participants will quickly bid up the price of the game until the odds become $1/p$ times your money if heads (and you lose your money if tails, as before). This makes the expected wealth multiple of the game $p\cdot (1/p) + (1-p) \cdot 0 = 1$ (i.e. no expected gain, since you're multiplying your wealth by $1$).
 
-If you think the market is right, i.e. you agree that the probability of heads is $p$, then you shouldn't bet at all. Kelly's criterion will tell you that $f^* = 0$ in this case. But what if you have an edge? What if you know that *real* probability of heads is $q$, even though the market thinks that it's $p$? Let's say that $q > p$, so that our edge makes us want to "go long" and pay the market price for the bet. How much should we bet? The reasoning is the same as before. The log EV of our wealth multiple is
+If you also think that the probability of heads is $p$, then you agree with the market pricing and you shouldn't bet at all. Kelly's criterion will tell you that $f^* = 0$ in this case. But what if you have an edge? What if you know that *real* probability of heads is $q$, even though the market thinks that it's $p$? Let's say that $q > p$, so that our edge makes us want to "go long" and pay the market price for the bet. How much should we bet? The reasoning is the same as before. The log EV of our wealth multiple is
 """)
 
 st.latex("""
@@ -246,7 +247,7 @@ st.header("Bayesian Inference")
 
 st.markdown("""
 Now let's make another modification to our coin flip example. In a more realistic setting, we would't have access to the true probability of heads. We'd only be able to estimate it. Let's leave efficient markets aside for a moment, and return to even odds (double our money if heads, lose our money if tails). We watched somebody play before us, and saw that the coin landed heads 17 out of 20 times. Based on that, we think that the true probability of heads $p$ follows a [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution), namely $p \sim
-\\text{Beta}(18,4)$. (We have no prior information on $p$, so we think it's uniform before we observe any data.)
+\\text{Beta}(18,4)$. (As a reminder, this is because $\\text{Beta}$ is a [conjugate prior](https://en.wikipedia.org/wiki/Conjugate_prior#Example) for the $\\text{Binom}$ data we observe, and our prior is that $p$ is uniform, i.e. $p \sim \\text{Beta}(1,1)$.)
 """)
 
 def plot_beta_dist():
@@ -267,7 +268,7 @@ plot_beta_dist()
 
 st.markdown("""
 
-Before, we assumed that we knew $p=85\%$, but now we only know that $p\sim\\text{Beta}(18,4)$. How will this affect the optimal choice of $f$? Let's get a little more general and write $a$ for the number of heads we observe, and $b$ for the number of tails. So when we have an uninformative prior for $p$, we think that $p \sim \\text{Beta}(a+1,b+1)$. As before, we want to maximize
+Before, we assumed that we knew $p=85\%$, but now we only know that $p\sim\\text{Beta}(18,4)$. How will this affect the optimal choice of $f$? Let's get a little more general and write $a$ for the number of heads we observe, and $b$ for the number of tails. So when we have an uninformative prior for $p$, we think that $p \sim \\text{Beta}(a+1,b+1)$ after observing this data. As before, we want to maximize
 
 """)
 
@@ -279,7 +280,7 @@ st.latex("""
 
 st.markdown("""
 
-As before, $X$ is a random variable that depends on $p$. But now that $p$ is a random variable too, we need to take the expected value over the joint distribution. We can do this by simply integrating the EV of $X$ conditional on $p$. In general, we might have to do this numerically. But in this case, we luck out and there is a simple closed formula. Let's see it. We calculate
+As before, $X$ is a random variable that depends on $p$. But now that $p$ is a random variable too, we need to take the expected value over the joint distribution. We can do this by simply integrating the EV of $X$ conditional on $p$ over the distribution for $p$. In general, we might have to do this numerically. But in this case, we luck out and there is a simple closed formula. Let's see it. We calculate
 
 """)
 
@@ -290,7 +291,7 @@ st.latex("""
 """)
 
 st.markdown("""
-where $\mathbb{P}_p(t)$ is the density function for the beta distribution. 
+where $\mathbb{P}_p(t)$ is the density function for the beta distribution. Continuing:
 """)
 
 st.latex("""= \int_{0}^{1} (t\log(1+f) + (1-t)\log(1-f))\mathbb{P}_p(t)dt
@@ -304,7 +305,15 @@ st.latex("""
 """)
 
 st.markdown("""
-But by our work above, we already know that this is maximized when $f^* = (2a+2)/(a+b+2)-1$ $= (a-b)/(a+b+2)$. So, when $p\sim\\text{Beta}(18,4)$ we get that $f^* = 14/22 \\approx 64\%$. Below, you can see how $f^*$ varies as a function of the number of heads $a$ and tails $b$ that we observe. Notice too that if we did the "naive" thing of simply assuming that the probability of heads was $p = a/(a+b)$, we'd get the wrong answer for $f^*$ and thus leave money on the table.
+But by our work above, we already know that this is maximized when
+""")
+
+st.latex("""
+f^* = (2a+2)/(a+b+2)-1 = (a-b)/(a+b+2).
+""")
+
+st.markdown("""
+So, when $p\sim\\text{Beta}(18,4)$ we get that $f^* = 14/22 \\approx 64\%$. Below, you can see how $f^*$ varies as a function of the number of heads $a$ and tails $b$ that we observe. Notice too that if we did the "naive" thing of simply assuming that the probability of heads was $p = a/(a+b)$, we'd get the wrong answer for $f^*$ and thus leave money on the table.
 """)
 
 a_demo = st.number_input("Number of observed heads:", min_value=1, value=17)
@@ -337,7 +346,7 @@ def plot_return_curves(a,b):
 plot_return_curves(a_demo,b_demo)
 
 st.markdown("""
-One way of interpreting what's happening here is that the Bayesian $f^*$ (blue) is optimizing for the true return curve (solid black), while the "naive" $f^*$ (orange) is optimizing for the naive curve (dashed black). You can see how this would work if you have an *informative* prior instead. If your prior is that $p\sim\\text{Beta}(a',b')$ and then you flip the coin $n$ times and observe $a$ heads and $b=n-a$ tails, your posterior is $p\sim\\text{Beta}(a+a',b+b')$. Somebody who doesn't have this prior would be optimizing $f$ for $\\text{Beta}(a,b)$, but you're optimizing optimizing for $\\text{Beta}(a+a',b+b')$.
+One way of interpreting what's happening here is that the Bayesian $f^*$ (blue) is optimizing for the true return curve (solid black), while the "naive" $f^*$ (orange) is optimizing for the naive curve (dashed black). You can see how this would work if you have an *informative* prior instead. If your prior is that $p\sim\\text{Beta}(a',b')$ and then you flip the coin $n$ times and observe $a$ heads and $b=n-a$ tails, your posterior is $p\sim\\text{Beta}(a+a',b+b')$. Somebody who doesn't have this prior would be optimizing $f$ for $\\text{Beta}(a,b)$, but you're optimizing optimizing for $\\text{Beta}(a+a',b+b')$. This leads to a question we'll consider in the next section: If you have a *more accurate* probability distribution than the market, how should you exploit it and valuable is that edge?
 """)
 
 st.header("Beating the Market")
@@ -346,14 +355,14 @@ st.markdown("""
 
 Now let's put these ideas together. There's a marketplace for coin flips. The market maker mints a coin, which has some unknown (and uniformly distributed) probability $p$ of landing heads. Market participants can go long or short the next coin flip. If A is long and B is short, and the coin comes up heads, then B pays A \$100. The price of a contract is set by the market. So, say, the price is \$90. That means that A paid \$90 for his/her long contract, and when B went short, he/she got paid \$90. So, in this example, A risked \$90 and made \$10, and B risked \$10 and lost \$10. This is close to how prediction markets like PredictIt work.
 
-Let's say that the market has observed $n$ coin flips, $a$ of which were heads and $b$ of which were tails. Then the market "thinks" that $p \sim \\text{Beta}(a+1, b+1)$ and "believes" that the next flip $X_{n+1}$ is is a Bernoulli trial with probability $p$ of heads. The price of going long will be $p \cdot \$100$ and the price of going short will be $(1 - p) \cdot \$100$.
+Let's say that the market has observed $n$ coin flips, $a$ of which were heads and $b$ of which were tails. If the market has correctly incorporated this information, then the market "thinks" that $p \sim \\text{Beta}(a+1, b+1)$ and "believes" that the next flip $X_{n+1}$ is is a Bernoulli trial with probability $p$ of heads. Letting $\hat{p} = (a+1)/(a+b+2)$, the price of going long will be $\hat{p} \cdot \$100$ and the price of going short will be $(1 - \hat{p}) \cdot \$100$.
 
 But now let's imagine that we know something the market does not. Let's say that we get the information equivalent of *five* extra flips of the coin. You can imagine this as inside information (we get to see some secret coin flips) or as better research (we built a 3D scanner and a physics engine that let us simulate coin flips). Either way, the rest of the market is left with a $\\text{Beta}(a+1,b+1)$ distribution, but we have a have a tighter $\\text{Beta}(a+a'+1, b+b'+1)$ distribution (where $a' + b' = 5$).
 
 How much is this worth? Well, from our work in the **Bayesian Inference** section above, we know that we'll be acting as if $p=(a+a'+1)/(a+a'+b+b'+2)$, and the market will be acting as if $p=(a+1)/(a+b+2)$.
 
 
-Let's write $\hat{p} = (a+1)/(a+b+2)$ for the market's point estimate of $p$, and let $\\tilde{p} = (1 + a + a')/(2 + a + b + a' + b')$ be our point estimate of $p$. If $\\tilde{p} > \hat{p}$, then from our earlier work in the **Betting with an Edge** section, we know that we're going to bet $(\\tilde{p}/\hat{p}-1)/(1/\hat{p}-1)$ of our wealth and that this is going to give us an edge of $D_{KL}(\\tilde{p} || \hat{p})$. Below, you can see what this looks like for different values of $a$ (the number of heads we "secretly" observe) and $a'$ (the number of heads observed by all market participants).
+Again, let's write $\hat{p} = (a+1)/(a+b+2)$ for the market's point estimate of $p$. And let's write $\\tilde{p} = (a + a' + 1)/(a + a' + b + b' + 2)$ for our point estimate of $p$. If $\\tilde{p} > \hat{p}$, then from our earlier work in the **Betting with an Edge** section, we know that we're going to bet $(\\tilde{p}/\hat{p}-1)/(1/\hat{p}-1)$ of our wealth and that this is going to give us an edge of $D_{KL}(\\tilde{p} || \hat{p})$. Below, you can see what this looks like for different values of $a$ (the number of heads we "secretly" observe) and $a'$ (the number of heads observed by all market participants).
 
 """)
 
@@ -402,10 +411,10 @@ def plot_final_example(a, a_prime, b, b_prime):
         "zero_return_line": [0]*len(fs)
     }, index=fs).plot(color=['black', 'black', 'tab:red'], style=['-','--', '--'])
     plt.plot(f_star, edge, 'ro', color='tab:blue')
-    plt.vlines([f_star], -1, 0.25, color='tab:blue', linestyle=':')
+    plt.vlines([f_star], -1, np.max([edge+0.1, 0.25]), color='tab:blue', linestyle=':')
     plt.hlines([edge], 0, 1, color='tab:blue', linestyle=':')
     plt.xlim(0,1)
-    plt.ylim(-1,0.25)
+    plt.ylim(-1,np.max([edge+0.1, 0.25]))
     plt.annotate("$x=(\\tilde{p}/\hat{p}-1)/(1/\hat{p}-1)$", xy=(f_star+0.02, -0.97), color='tab:blue')
     plt.annotate("$y=D(\\tilde{p}||\hat{p})$", xy=(0.02, edge+0.02), color='tab:blue')
     plt.legend()
@@ -415,3 +424,17 @@ def plot_final_example(a, a_prime, b, b_prime):
     st.pyplot()
 
 plot_final_example(a, a_prime, b, b_prime)
+
+st.markdown("""
+
+As you might expect, our edge is most valuable when our beliefs are most different from the market consensus. For example, if we get very lucky and $a' = 5$ while $a = 0$, then we end up with a massive edge of almost 0.36. This means that (on average), every time we make this bet, we get to multiply our wealth by about 1.42x. Mechanically, we're getting paid out 7x our money on every heads, even though we actually stand a 50% chance of winning. Of course, it'd be rare for us to observe 5 heads and the market to observe 5 tails — if the true value of $p$ is 0.5, there's just a $2/2^{10} \\approx 0.2\%$ chance of this happening.
+
+""")
+
+st.header("Further Reading")
+
+st.markdown("""
+
+If you found this interesting, check out Thorpe's survey article "[The Kelly Criterion in Blackjack Sports Betting and the Stock Market](http://www.eecs.harvard.edu/cs286r/courses/fall12/papers/Thorpe_KellyCriterion2007.pdf)". Kelly's [original paper](http://www.herrold.com/brokerage/kelly.pdf) is also great.
+
+""")
