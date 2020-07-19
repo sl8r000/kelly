@@ -1,4 +1,5 @@
 import streamlit as st
+import seaborn as sns
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -427,9 +428,24 @@ plot_final_example(a, a_prime, b, b_prime)
 
 st.markdown("""
 
-As you might expect, our edge is most valuable when our beliefs are most different from the market consensus. For example, if we get very lucky and $a' = 5$ while $a = 0$, then we end up with a massive edge of almost 0.36. This means that (on average), every time we make this bet, we get to multiply our wealth by about 1.42x. Mechanically, we're getting paid out 7x our money on every heads, even though we actually stand a 50% chance of winning. Of course, it'd be rare for us to observe 5 heads and the market to observe 5 tails — if the true value of $p$ is 0.5, there's just a $2/2^{10} \\approx 0.2\%$ chance of this happening.
-
+As you might expect, our edge is most valuable when our beliefs are most different from the market consensus. For example, if we get very lucky and $a' = 5$ while $a = 0$, then we end up with a massive edge of almost 0.36 (in the exponential rate of return). This means that (on average), every time we make this bet, we get to multiply our wealth by about $\exp(0.357) = 1.43$. Mechanically, we're getting paid out 7x our money on every heads, even though we actually stand a 50% chance of winning. Of course, it'd be rare for us to observe 5 heads and the market to observe 5 tails — if the true value of $p$ is 0.5, there's just a $2/2^{10} \\approx 0.2\%$ chance of this happening. But even with more moderate divergence from $\\tilde{p}$ to $\hat{p}$, we can still generate consistent alpha over time.
 """)
+
+def plot_heatmap():
+    a = np.repeat(np.arange(6), 6).reshape(6,6)
+    a_prime = a.T
+    p_hat = (a+1)/7.0
+    p_tilde = (a + a_prime + 1)/12.0
+    div = p_tilde*np.log(p_tilde/p_hat) + (1-p_tilde)*np.log((1-p_tilde)/(1-p_hat))
+    df = pd.DataFrame(div, index=np.arange(6), columns=np.arange(6))
+    # df[p_tilde < p_hat] = np.nan
+    sns.heatmap(df.iloc[::-1], annot=True, fmt="0.3f")
+    plt.xlabel("Heads Observed Just by Us")
+    plt.ylabel("Heads Observed by All")
+    plt.title("$D(\\tilde{p}||\hat{p})$\nOur Excess Return")
+    st.pyplot()
+
+plot_heatmap()
 
 st.header("Further Reading")
 
