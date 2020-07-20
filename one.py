@@ -10,22 +10,24 @@ from scipy.stats import mstats
 st.title("Log Optimal Betting")
 
 st.markdown("""
-In 1956, the mathematician John Kelly didn't just discover how to get rich quick — he also proved that there was no way to get rich quicker. Given a favorable bet that you can make repeatedly, Kelly determined how much to wager each time so that you maximize the rate at which your wealth grows in the long run. Below, we'll see how Kelly's method works by starting with a simple coin flip example and gradually modifying it to get more interesting.
+In 1956, the mathematician John Kelly didn't just discover how to get rich quick — he also proved that there was no way to get rich quicker.
+
+Given a favorable bet that you can make repeatedly, Kelly determined how much to wager each time so that you maximize the rate at which your wealth grows in the long run. Below, we'll see how Kelly's method works by starting with a simple coin flip example and gradually modifying it to get more interesting.
 """)
 
 st.header("Classical Coin Flip Example")
 
 st.markdown("""
-Let's start building intiution with a classical coin flip example. You have a biased coin that lands heads up with probability $p > 0.5$. You can bet as much as you want on a flip of that coin, with the following "double or nothing" payoffs:
+Let's start building intiution by reconsidering the classic coin flip setup. You have a biased coin that lands heads up with probability $p > 0.5$. You can bet as much as you want on a flip of that coin, with the following "double or nothing" payoffs:
 
 * If it lands heads, you double whatever you bet;
 * If it lands tails, you lose whatever you bet.
 
 So if you bet \$5 and win, you'll get \$10 (your original \$5 plus \$5 more). If you bet \$5 and lose, your \$5 is gone. You can play repeatedly — as many times as you want, as long as you still have money to bet. 
 
-So, how much should you bet?
+So, how much should you bet? This is the question that Kelly answered in his '56 paper. Here's how he reasoned about it.
 
-Here's how Kelly reasoned about it. Let's constrain the problem for a moment, and say that you're going to bet the same, fixed fraction $f$ of your total wealth on each flip. So, for example, if $f=20\%$ and you start with \$100, then your first bet is \$20. If you win that first flip, your next bet will be \$24 (20% of \$120). If you lose, it'll be \$16. And so on. Kelly then asked: In this constrained setting, what is the optimal choice of $f$ for maximizing the growth rate of your wealth?
+Let's constrain the problem for a moment, and say that you're going to bet the same, fixed fraction $f$ of your total wealth on each flip. So, for example, if $f=20\%$ and you start with \$100, then your first bet is \$20. If you win that first flip, your next bet will be \$24 (20% of \$120). If you lose, it'll be \$16. And so on. Kelly then asked: In this constrained setting, what is the optimal choice of $f$ for maximizing the growth rate of your wealth?
 
 Instead of jumping right to the answer, let's play around with a simulation to get a feel for what happens as $p$ and $f$ vary. Below, you can choose the value of $p$ and see how different choices of $f$ fare over 10,000 coin flips. These are plotted on a log y scale with base 10, so a "50" on that axis means that you multiplied your wealth by $10^{50}$.
 """)
@@ -428,7 +430,7 @@ plot_final_example(a, a_prime, b, b_prime)
 
 st.markdown("""
 
-As you might expect, our edge is most valuable when our beliefs are most different from the market consensus. For example, if we get very lucky and $a' = 5$ while $a = 0$, then we end up with a massive edge of almost 0.36 (in the exponential rate of return). This means that (on average), every time we make this bet, we get to multiply our wealth by about $\exp(0.357) = 1.43$. Mechanically, we're getting paid out 7x our money on every heads, even though we actually stand a 50% chance of winning. Of course, it'd be rare for us to observe 5 heads and the market to observe 5 tails — if the true value of $p$ is 0.5, there's just a $2/2^{10} \\approx 0.2\%$ chance of this happening. But even with more moderate divergence from $\\tilde{p}$ to $\hat{p}$, we can still generate consistent alpha over time.
+As you might expect, our edge is most valuable when our beliefs are most different from the market consensus. For example, if we get very lucky and $a' = 5$ while $a = 0$, then we end up with a massive edge of almost 0.36 (in the exponential rate of return). This means that (on average), every time we make this bet, we get to multiply our wealth by about $\exp(0.357) = 1.43$. Mechanically, we're getting paid out 7x our money on every heads, even though we actually stand a 50% chance of winning. Of course, it'd be rare for us to observe 5 heads and the market to observe 5 tails — if the true value of $p$ is 0.5, there's just a $2/2^{10} \\approx 0.2\%$ chance of this happening. But even with more moderate divergence from $\\tilde{p}$ to $\hat{p}$, we can still generate consistent alpha over time. The following heatmap shows our edge as a function of $a$ and $a'$:
 """)
 
 def plot_heatmap():
@@ -451,6 +453,6 @@ st.header("Further Reading")
 
 st.markdown("""
 
-If you found this interesting, check out Thorpe's survey article "[The Kelly Criterion in Blackjack Sports Betting and the Stock Market](http://www.eecs.harvard.edu/cs286r/courses/fall12/papers/Thorpe_KellyCriterion2007.pdf)". Kelly's [original paper](http://www.herrold.com/brokerage/kelly.pdf) is also great.
+You can take log-optimal betting much further. If you found this interesting, check out Thorpe's survey article "[The Kelly Criterion in Blackjack Sports Betting and the Stock Market](http://www.eecs.harvard.edu/cs286r/courses/fall12/papers/Thorpe_KellyCriterion2007.pdf)". Kelly's [original paper](http://www.herrold.com/brokerage/kelly.pdf) is also a great intro, as are Chapters 6 and 16 of [Cover and Thomas](https://www.amazon.com/Elements-Information-Theory-Telecommunications-Processing/dp/0471241954). For more advanced applications, check out [MacLean, Thorp, and Ziemba](https://www.amazon.com/KELLY-CAPITAL-GROWTH-INVESTMENT-CRITERION/dp/9814383139).
 
 """)
