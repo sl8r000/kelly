@@ -10,6 +10,9 @@ from scipy.stats import mstats
 st.title("Log Optimal Betting")
 
 st.markdown("""
+
+*[@slaterstich](https://twitter.com/slaterstich)*
+
 In 1956, the mathematician John Kelly didn't just discover how to get rich quick — he also proved that there was no way to get rich quicker.
 
 Given a favorable bet that you can make repeatedly, Kelly determined how much to wager each time so that you maximize the rate at which your wealth grows in the long run. Below, we'll see how Kelly's method works by starting with a simple coin flip example and gradually modifying it to get more interesting.
@@ -454,5 +457,7 @@ st.header("Further Reading")
 st.markdown("""
 
 You can take log-optimal betting much further. If you found this interesting, check out Thorpe's survey article "[The Kelly Criterion in Blackjack Sports Betting and the Stock Market](http://www.eecs.harvard.edu/cs286r/courses/fall12/papers/Thorpe_KellyCriterion2007.pdf)". Kelly's [original paper](http://www.herrold.com/brokerage/kelly.pdf) is also a great intro, as are Chapters 6 and 16 of [Cover and Thomas](https://www.amazon.com/Elements-Information-Theory-Telecommunications-Processing/dp/0471241954). For more advanced applications, check out [MacLean, Thorp, and Ziemba](https://www.amazon.com/KELLY-CAPITAL-GROWTH-INVESTMENT-CRITERION/dp/9814383139).
+
+*[@slaterstich](https://twitter.com/slaterstich)*
 
 """)
