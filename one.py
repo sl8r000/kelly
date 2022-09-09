@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from scipy import stats, special
 from scipy.stats import mstats
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
 st.title("Log Optimal Betting")
 
 st.markdown("""
@@ -26,7 +27,7 @@ Let's start building intiution by reconsidering the classic coin flip setup. You
 * If it lands heads, you double whatever you bet;
 * If it lands tails, you lose whatever you bet.
 
-So if you bet \$5 and win, you'll get \$10 (your original \$5 plus \$5 more). If you bet \$5 and lose, your \$5 is gone. You can play repeatedly — as many times as you want, as long as you still have money to bet. 
+So if you bet \$5 and win, you'll get \$10 (your original \$5 plus \$5 more). If you bet \$5 and lose, your \$5 is gone. You can play repeatedly — as many times as you want, as long as you still have money to bet.
 
 So, how much should you bet? This is the question that Kelly answered in his '56 paper. Here's how he reasoned about it.
 
@@ -38,7 +39,7 @@ Instead of jumping right to the answer, let's play around with a simulation to g
 p = st.slider(
     "Choose the value of p, the probability that the coin lands heads up.",
     min_value=0.0,
-    max_value=1.0, 
+    max_value=1.0,
     value=0.75
 )
 n_flips = 10000
@@ -160,7 +161,7 @@ def plot_first_returns(fv, n_flips):
     plt.tight_layout()
     st.pyplot()
 
-plot_first_returns(fv, n_flips) 
+plot_first_returns(fv, n_flips)
 
 st.markdown("""
 There's nothing special about the coin flip example, the same reasoning applies for any favorable game that you can play repeatedly. In general, suppose you have a bet $X$ with payoffs such that your wealth gets multiplied by $1+fX$ when you bet $f$ of your bankroll. You can make this bet repeatedly, using IID $X_k \sim X$. So by the same reasoning as above, your wealth multiple after playing $n$ times is
@@ -202,7 +203,7 @@ A little bookkeeping: At the beginning of this section, we assumed that we were 
 I also said it was obvious that the wealth growth multiple, $1+fX$, is the right thing to maximize, since this is what dominates returns in the long run. Actually, this is a bit "controversial", and the subject of a long-running feud in the literature, generally waged between a group of mathematicians who are pro-Kelly and a group of classical economists who are anti-Kelly. Econ Nobel Laureate Paul Samuelson even wrote a super [snarky
 paper](http://www-stat.wharton.upenn.edu/~steele/Courses/434/434Context/Kelly%20Resources/Samuelson1979.pdf) arguing against the Kelly criterion, using mostly one-syllable words so that his oponents could understand him.
 
-One can argue about utility functions, but I basically think the log-optimal crowd is right — especially if you're managing your own money. For a fun history of the Kelly criterion, check out William Poundstone's [Fortune's Formula](https://www.amazon.com/Fortunes-Formula-Scientific-Betting-Casinos/dp/0809045990). Ed Thorp, one of the mathematicians in the debate (and the inventor of card counting for blackjack) has a [great autobiography](https://www.amazon.com/Man-All-Markets-Street-Dealer/dp/0812979907), and compiled a [set of papers](https://www.amazon.com/KELLY-CAPITAL-GROWTH-INVESTMENT-CRITERION/dp/9814383139) with MacLean and Ziemba. My favorite take on the economists vs mathematicians debate comes from Ole Peters in a [2012 talk](https://www.youtube.com/watch?v=f1vXAHGIpfc) at Gresham College, where he points out that the economists' perspective optimizes for an "ensemble average" over a population, while the mathematicians' perspective optimizes for an individual outcome over time. 
+One can argue about utility functions, but I basically think the log-optimal crowd is right — especially if you're managing your own money. For a fun history of the Kelly criterion, check out William Poundstone's [Fortune's Formula](https://www.amazon.com/Fortunes-Formula-Scientific-Betting-Casinos/dp/0809045990). Ed Thorp, one of the mathematicians in the debate (and the inventor of card counting for blackjack) has a [great autobiography](https://www.amazon.com/Man-All-Markets-Street-Dealer/dp/0812979907), and compiled a [set of papers](https://www.amazon.com/KELLY-CAPITAL-GROWTH-INVESTMENT-CRITERION/dp/9814383139) with MacLean and Ziemba. My favorite take on the economists vs mathematicians debate comes from Ole Peters in a [2012 talk](https://www.youtube.com/watch?v=f1vXAHGIpfc) at Gresham College, where he points out that the economists' perspective optimizes for an "ensemble average" over a population, while the mathematicians' perspective optimizes for an individual outcome over time.
 """)
 
 st.header("Betting with an Edge")
